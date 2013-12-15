@@ -16,9 +16,8 @@ static const char* IntStateNames[] =
 
 enum IntState
 {
-   x = 0,
-   y,
-   IntStateMax
+   IS_x = 0,
+   IS_y
 };
 
 node_parameters
@@ -43,10 +42,10 @@ shader_evaluate
    IntState which = (IntState) AiShaderEvalParamInt(p_state);
    switch (which)
    {
-   case x:
+   case IS_x:
       sg->out.INT = sg->x;
       break;
-   case y:
+   case IS_y:
       sg->out.INT = sg->y;
       break;
    default:

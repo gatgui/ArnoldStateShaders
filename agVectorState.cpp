@@ -33,26 +33,25 @@ static const char* VectorStateNames[] =
 
 enum VectorState
 {
-   P = 0,
-   Po,
-   N,
-   Nf,
-   Ng,
-   Ngf,
-   Ns,
-   Ro,
-   Rd,
-   dPdx,
-   dPdy,
-   dPdu,
-   dPdv,
-   dDdx,
-   dDdy,
+   VS_P = 0,
+   VS_Po,
+   VS_N,
+   VS_Nf,
+   VS_Ng,
+   VS_Ngf,
+   VS_Ns,
+   VS_Ro,
+   VS_Rd,
+   VS_dPdx,
+   VS_dPdy,
+   VS_dPdu,
+   VS_dPdv,
+   VS_dDdx,
+   VS_dDdy,
 #ifdef ARNOLD_4_1_AND_UP
-   dNdx,
-   dNdy,
+   VS_dNdx,
+   VS_dNdy,
 #endif
-   VectorStateMax
 };
 
 node_parameters
@@ -77,56 +76,56 @@ shader_evaluate
    VectorState which = (VectorState) AiShaderEvalParamInt(p_state);
    switch (which)
    {
-   case P:
+   case VS_P:
       sg->out.VEC = sg->P;
       break;
-   case Po:
+   case VS_Po:
       sg->out.VEC = sg->Po;
       break;
-   case N:
+   case VS_N:
       sg->out.VEC = sg->N;
       break;
-   case Nf:
+   case VS_Nf:
       sg->out.VEC = sg->Nf;
       break;
-   case Ng:
+   case VS_Ng:
       sg->out.VEC = sg->Ng;
       break;
-   case Ngf:
+   case VS_Ngf:
       sg->out.VEC = sg->Ngf;
       break;
-   case Ns:
+   case VS_Ns:
       sg->out.VEC = sg->Ns;
       break;
-   case Ro:
+   case VS_Ro:
       sg->out.VEC = sg->Ro;
       break;
-   case Rd:
+   case VS_Rd:
       sg->out.VEC = sg->Rd;
       break;
-   case dPdx:
+   case VS_dPdx:
       sg->out.VEC = sg->dPdx;
       break;
-   case dPdy:
+   case VS_dPdy:
       sg->out.VEC = sg->dPdy;
       break;
-   case dPdu:
+   case VS_dPdu:
       sg->out.VEC = sg->dPdu;
       break;
-   case dPdv:
+   case VS_dPdv:
       sg->out.VEC = sg->dPdv;
       break;
-   case dDdx:
+   case VS_dDdx:
       sg->out.VEC = sg->dDdx;
       break;
-   case dDdy:
+   case VS_dDdy:
       sg->out.VEC = sg->dDdy;
       break;
 #ifdef ARNOLD_4_1_AND_UP
-   case dNdx:
+   case VS_dNdx:
       sg->out.VEC = sg->dNdx;
       break;
-   case dNdy:
+   case VS_dNdy:
       sg->out.VEC = sg->dNdy;
       break;
 #endif
