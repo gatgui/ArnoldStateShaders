@@ -59,6 +59,49 @@ struct FloatStateData
    float fps;
 };
 
+static bool GetNodeConstantFloat(AtNode *node, const char *name, float &val, const char *msg=NULL)
+{
+   const AtUserParamEntry *pe = AiNodeLookUpUserParameter(node, name);
+   if (pe != 0)
+   {
+      int type = AiUserParamGetType(pe);
+      int cat = AiUserParamGetCategory(pe);
+      
+      if (cat == AI_USERDEF_CONSTANT)
+      {
+         switch (type)
+         {
+         case AI_TYPE_BYTE:
+            val = float(AiNodeGetByte(node, name));
+            break;
+         case AI_TYPE_INT:
+            val = float(AiNodeGetInt(node, name));
+            break;
+         case AI_TYPE_UINT:
+            val = float(AiNodeGetUInt(node, name));
+            break;
+         case AI_TYPE_FLOAT:
+            val = AiNodeGetFlt(node, name);
+            break;
+         default:
+            AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" should be a float or an integer (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+            return false;
+         }
+         return true;
+      }
+      else
+      {
+         AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" must be a constant (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+         return false;
+      }
+   }
+   else
+   {
+      AiMsgWarning("[float_state] \"%s\" parameter not defined on node \"%s\" (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+      return false;
+   }
+}
+
 node_parameters
 {
    AiParameterEnum("state", 0, FloatStateNames);
@@ -74,166 +117,27 @@ node_update
 {
    FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
    
-   data->frame = 1.0f;
-   data->motion_start_frame = 1.0f;
-   data->motion_end_frame = 1.0f;
+   data->frame = 0.0f;
+   data->motion_start_frame = 0.0f;
+   data->motion_end_frame = 0.0f;
    data->fps = 24.0f;
 
    AtNode *opts = AiUniverseGetOptions();
    if (opts)
    {
-      const AtUserParamEntry *pe;
-
-      pe = AiNodeLookUpUserParameter(opts, "frame");
-      if (pe != 0)
-      {
-         int type = AiUserParamGetType(pe);
-         int cat = AiUserParamGetCategory(pe);
-         if (cat == AI_USERDEF_CONSTANT)
-         {
-            switch (type)
-            {
-            case AI_TYPE_BYTE:
-               data->frame = float(AiNodeGetByte(opts, "frame"));
-               break;
-            case AI_TYPE_INT:
-               data->frame = float(AiNodeGetInt(opts, "frame"));
-               break;
-            case AI_TYPE_UINT:
-               data->frame = float(AiNodeGetUInt(opts, "frame"));
-               break;
-            case AI_TYPE_FLOAT:
-               data->frame = AiNodeGetFlt(opts, "frame");
-               break;
-            default:
-               AiMsgWarning("[float_state] Found \"frame\" attribute on options node, but invalid type. Default value to 1.0");
-            }
-         }
-         else
-         {
-            AiMsgWarning("[float_state] Found \"frame\" attribute on options node, but not a constant. Default value to 1.0");
-         }
-      }
-      else
-      {
-         AiMsgWarning("[float_state] Cannot find \"frame\" attribute in options node. Defaults to 1.0");
-      }
+      GetNodeConstantFloat(opts, "frame", data->frame, "Defaults to 0");
       
-      pe = AiNodeLookUpUserParameter(opts, "motion_start_frame");
-      if (pe != 0)
-      {
-         int type = AiUserParamGetType(pe);
-         int cat = AiUserParamGetCategory(pe);
-         if (cat == AI_USERDEF_CONSTANT)
-         {
-            switch (type)
-            {
-            case AI_TYPE_BYTE:
-               data->motion_start_frame = float(AiNodeGetByte(opts, "motion_start_frame"));
-               break;
-            case AI_TYPE_INT:
-               data->motion_start_frame = float(AiNodeGetInt(opts, "motion_start_frame"));
-               break;
-            case AI_TYPE_UINT:
-               data->motion_start_frame = float(AiNodeGetUInt(opts, "motion_start_frame"));
-               break;
-            case AI_TYPE_FLOAT:
-               data->motion_start_frame = AiNodeGetFlt(opts, "motion_start_frame");
-               break;
-            default:
-               AiMsgWarning("[float_state] Found \"motion_start_frame\" attribute on options node, but invalid type. Default value to 'frame'");
-               data->motion_start_frame = data->frame;
-            }
-         }
-         else
-         {
-            AiMsgWarning("[float_state] Found \"motion_start_frame\" attribute on options node, but not a constant. Default value to 'frame'");
-            data->motion_start_frame = data->frame;
-         }
-      }
-      else
-      {
-         AiMsgWarning("[float_state] Cannot find \"motion_start_frame\" attribute in options node. Defaults to 'frame'");
-         data->motion_start_frame = data->frame;
-      }
-
-      pe = AiNodeLookUpUserParameter(opts, "motion_end_frame");
-      if (pe != 0)
-      {
-         int type = AiUserParamGetType(pe);
-         int cat = AiUserParamGetCategory(pe);
-         if (cat == AI_USERDEF_CONSTANT)
-         {
-            switch (type)
-            {
-            case AI_TYPE_BYTE:
-               data->motion_end_frame = float(AiNodeGetByte(opts, "motion_end_frame"));
-               break;
-            case AI_TYPE_INT:
-               data->motion_end_frame = float(AiNodeGetInt(opts, "motion_end_frame"));
-               break;
-            case AI_TYPE_UINT:
-               data->motion_end_frame = float(AiNodeGetUInt(opts, "motion_end_frame"));
-               break;
-            case AI_TYPE_FLOAT:
-               data->motion_end_frame = AiNodeGetFlt(opts, "motion_end_frame");
-               break;
-            default:
-               AiMsgWarning("[float_state] Found \"motion_end_frame\" attribute on options node, but invalid type. Default value to 'motion_start_frame'");
-               data->motion_end_frame = data->motion_start_frame;
-            }
-         }
-         else
-         {
-            AiMsgWarning("[float_state] Found \"motion_end_frame\" attribute on options node, but not a constant. Default value to 'motion_start_frame'");
-            data->motion_end_frame = data->motion_start_frame;
-         }
-      }
-      else
-      {
-         AiMsgWarning("[float_state] Cannot find \"motion_end_frame\" attribute in options node. Defaults to 'motion_start_frame'");
-         data->motion_end_frame = data->motion_start_frame;
-      }
+      data->motion_start_frame = data->frame;
+      GetNodeConstantFloat(opts, "motion_start_frame", data->motion_start_frame, "Defaults to 'frame'");
       
-      pe = AiNodeLookUpUserParameter(opts, "fps");
-      if (pe != 0)
-      {
-         int type = AiUserParamGetType(pe);
-         int cat = AiUserParamGetCategory(pe);
-         if (cat == AI_USERDEF_CONSTANT)
-         {
-            switch (type)
-            {
-            case AI_TYPE_BYTE:
-               data->fps = float(AiNodeGetByte(opts, "fps"));
-               break;
-            case AI_TYPE_INT:
-               data->fps = float(AiNodeGetInt(opts, "fps"));
-               break;
-            case AI_TYPE_UINT:
-               data->fps = float(AiNodeGetUInt(opts, "fps"));
-               break;
-            case AI_TYPE_FLOAT:
-               data->fps = AiNodeGetFlt(opts, "fps");
-               break;
-            default:
-               AiMsgWarning("[float_state] Found \"fps\" attribute on options node, but invalid type. Default value to 24.0");
-            }
-         }
-         else
-         {
-            AiMsgWarning("[float_state] Found \"fps\" attribute on options node, but not a constant. Default value to 24.0");
-         }
-      }
-      else
-      {
-         AiMsgWarning("[float_state] Cannot find \"fps\" attribute in options node. Defaults to 24.0");
-      }
+      data->motion_end_frame = data->motion_start_frame;
+      GetNodeConstantFloat(opts, "motion_end_frame", data->motion_start_frame, "Defaults to 'motion_start_frame'");
       
+      GetNodeConstantFloat(opts, "fps", data->fps, "Defaults to 24");
    }
    else
    {
-      AiMsgWarning("[float_state] Cannot find \"frame\" or \"fps\" in options node. Defaults to 1.0 and 24.0 respectivelly");
+      AiMsgWarning("[float_state] No options node. \"frame\", \"fps\", \"motion_start_frame\" and \"motion_end_frame\" default to 0, 24, 0 and 0 respectivelly");
    }
 }
 
