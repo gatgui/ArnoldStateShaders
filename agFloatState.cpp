@@ -27,6 +27,10 @@ static const char* FloatStateNames[] =
    "frame",
    "fps",
    "sample_frame",
+   "shutter_open_frame",
+   "shutter_close_frame",
+   "shutter_open_time",
+   "shutter_close_time",
    NULL
 };
 
@@ -48,14 +52,22 @@ enum FloatState
    FS_area,
    FS_frame,
    FS_fps,
-   FS_sample_frame
+   FS_sample_frame,
+   FS_shutter_open_frame,
+   FS_shutter_close_frame,
+   FS_shutter_open_time,
+   FS_shutter_close_time
 };
 
 struct FloatStateData
 {
-   float frame;
-   float motion_start_frame;
-   float motion_end_frame;
+   float frame; // The frame being rendered
+   float motion_start_frame; // First motion sample frame
+   float motion_end_frame; // Last motion sample frame
+   float shutter_open_frame; // Shutter open frame
+   float shutter_close_frame; // Shutter close frame
+   float shutter_open_time;
+   float shutter_close_time;
    float fps;
 };
 
@@ -120,6 +132,10 @@ node_update
    data->frame = 0.0f;
    data->motion_start_frame = 0.0f;
    data->motion_end_frame = 0.0f;
+   data->shutter_open_frame = 0.0f;
+   data->shutter_close_frame = 0.0f;
+   data->shutter_open_time = 0.0f;
+   data->shutter_close_time = 0.0f;
    data->fps = 24.0f;
 
    AtNode *opts = AiUniverseGetOptions();
@@ -132,6 +148,32 @@ node_update
       
       data->motion_end_frame = data->motion_start_frame;
       GetNodeConstantFloat(opts, "motion_end_frame", data->motion_start_frame, "Defaults to 'motion_start_frame'");
+      
+      AtNode *camera = AiUniverseGetCamera();
+      if (camera)
+      {
+         data->shutter_open_time = AiNodeGetFlt(camera, "shutter_start");
+         data->shutter_close_time = AiNodeGetFlt(camera, "shutter_end");
+         
+         float sample_length = data->motion_end_frame - data->motion_start_frame;
+         
+         if (sample_length <= 0.0f)
+         {
+            data->shutter_open_frame = data->motion_start_frame;
+            data->shutter_close_frame = data->motion_start_frame;
+         }
+         else
+         {
+            data->shutter_open_frame = data->motion_start_frame + data->shutter_open_time * sample_length;
+            data->shutter_close_frame = data->motion_start_frame + data->shutter_close_time * sample_length;
+         }
+      }
+      else
+      {
+         AiMsgWarning("[float_state] No render camera set. Default shutter_open_frame and shuffer_close_frame to 'motion_start_frame'");
+         data->shutter_open_frame = data->motion_start_frame;
+         data->shutter_close_frame = data->shutter_open_frame;
+      }
       
       GetNodeConstantFloat(opts, "fps", data->fps, "Defaults to 24");
    }
@@ -204,6 +246,30 @@ shader_evaluate
       {
          FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
          sg->out.FLT = data->fps;
+      }
+      break;
+   case FS_shutter_open_time:
+      {
+         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
+         sg->out.FLT = data->shutter_open_time;
+      }
+      break;
+   case FS_shutter_close_time:
+      {
+         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
+         sg->out.FLT = data->shutter_close_time;
+      }
+      break;
+   case FS_shutter_open_frame:
+      {
+         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
+         sg->out.FLT = data->shutter_open_frame;
+      }
+      break;
+   case FS_shutter_close_frame:
+      {
+         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
+         sg->out.FLT = data->shutter_close_frame;
       }
       break;
    case FS_sample_frame:
