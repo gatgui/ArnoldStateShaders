@@ -29,6 +29,8 @@ enum MatrixState
 node_parameters
 {
    AiParameterEnum("state", 0, MatrixStateNames);
+   
+   AiMetaDataSetBool(mds, "state", "linkable", false);
 }
 
 node_initialize

@@ -31,6 +31,8 @@ enum ColorState
 node_parameters
 {
    AiParameterEnum("state", CS_Li, ColorStateNames);
+   
+   AiMetaDataSetBool(mds, "state", "linkable", false);
 }
 
 node_initialize

@@ -23,6 +23,8 @@ enum IntState
 node_parameters
 {
    AiParameterEnum("state", 0, IntStateNames);
+   
+   AiMetaDataSetBool(mds, "state", "linkable", false);
 }
 
 node_initialize
