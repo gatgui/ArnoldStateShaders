@@ -57,6 +57,8 @@ enum VectorState
 node_parameters
 {
    AiParameterEnum("state", 0, VectorStateNames);
+   
+   AiMetaDataSetBool(mds, "state", "linkable", false);
 }
 
 node_initialize
