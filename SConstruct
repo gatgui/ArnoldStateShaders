@@ -9,7 +9,7 @@ prjs = [
   {"name": "agState",
    "type": "dynamicmodule",
    "ext": arnold.PluginExt(),
-   "srcs": glob.glob("*.cpp"),
+   "srcs": glob.glob("src/*.cpp"),
    "custom": [arnold.Require]
   }
 ]
