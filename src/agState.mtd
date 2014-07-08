@@ -1,0 +1,20 @@
+
+[node vector_state]
+   maya.classification STRING "shader/utility"
+   maya.id INT 0x001165F7
+
+[node float_state]
+   maya.classification STRING "shader/utility"
+   maya.id INT 0x001165F8
+
+[node color_state]
+   maya.classification STRING "shader/utility"
+   maya.id INT 0x001165F9
+
+[node integer_state]
+   maya.classification STRING "shader/utility"
+   maya.id INT 0x001165FA
+
+[node matrix_state]
+   maya.classification STRING "shader/utility"
+   maya.id INT 0x001165FB
