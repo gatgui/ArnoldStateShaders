@@ -18,3 +18,7 @@
 [node matrix_state]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165FB
+
+[node node_state]
+   maya.classification STRING "utility/state"
+   maya.id INT 0x00116555

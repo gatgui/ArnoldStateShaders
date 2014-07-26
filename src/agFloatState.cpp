@@ -31,6 +31,7 @@ static const char* FloatStateNames[] =
    "shutter_close_frame",
    "shutter_open_time",
    "shutter_close_time",
+   "light_distance",
    NULL
 };
 
@@ -56,7 +57,8 @@ enum FloatState
    FS_shutter_open_frame,
    FS_shutter_close_frame,
    FS_shutter_open_time,
-   FS_shutter_close_time
+   FS_shutter_close_time,
+   FS_Ldist
 };
 
 struct FloatStateData
@@ -279,6 +281,9 @@ shader_evaluate
          FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
          sg->out.FLT = data->motion_start_frame + sg->time * (data->motion_end_frame - data->motion_start_frame);
       }
+      break;
+   case FS_Ldist:
+      sg->out.FLT = sg->Ldist;
       break;
    default:
       sg->out.FLT = 0.0f;

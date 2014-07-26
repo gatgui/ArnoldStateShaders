@@ -28,6 +28,7 @@ static const char* VectorStateNames[] =
    "dNdx",
    "dNdy",
 #endif
+   "incident_light_direction",
    NULL
 };
 
@@ -52,6 +53,7 @@ enum VectorState
    VS_dNdx,
    VS_dNdy,
 #endif
+   VS_Ld
 };
 
 node_parameters
@@ -131,6 +133,9 @@ shader_evaluate
       sg->out.VEC = sg->dNdy;
       break;
 #endif
+   case VS_Ld:
+      sg->out.VEC = sg->Ld;
+      break;
    default:
       sg->out.VEC = AI_V3_ZERO;
    }

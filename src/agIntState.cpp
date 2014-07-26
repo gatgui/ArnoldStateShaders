@@ -11,13 +11,23 @@ static const char* IntStateNames[] =
 {
    "raster_x",
    "raster_y",
+   "active_lights_count",
+   "reflection_depth",
+   "refraction_depth",
+   "diffuse_depth",
+   "glossy_depth",
    NULL
 };
 
 enum IntState
 {
    IS_x = 0,
-   IS_y
+   IS_y,
+   IS_nlights,
+   IS_refl_depth,
+   IS_refr_depth,
+   IS_diff_depth,
+   IS_gloss_depth
 };
 
 node_parameters
@@ -49,6 +59,21 @@ shader_evaluate
       break;
    case IS_y:
       sg->out.INT = sg->y;
+      break;
+   case IS_nlights:
+      sg->out.INT = sg->nlights;
+      break;
+   case IS_refl_depth:
+      sg->out.INT = sg->Rr_refl;
+      break;
+   case IS_refr_depth:
+      sg->out.INT = sg->Rr_refr;
+      break;
+   case IS_diff_depth:
+      sg->out.INT = sg->Rr_diff;
+      break;
+   case IS_gloss_depth:
+      sg->out.INT = sg->Rr_gloss;
       break;
    default:
       sg->out.INT = 0;

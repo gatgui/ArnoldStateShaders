@@ -6,6 +6,7 @@ extern AtNodeMethods* agColorStateMtd;
 extern AtNodeMethods* agIntStateMtd;
 extern AtNodeMethods* agFloatStateMtd;
 extern AtNodeMethods* agMatrixStateMtd;
+extern AtNodeMethods* agNodeStateMtd;
 
 node_loader
 {
@@ -51,6 +52,15 @@ node_loader
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_MATRIX;
       node->methods = agMatrixStateMtd;
+      strcpy(node->version, AI_VERSION);
+      return true;
+   }
+   else if (i == 5)
+   {
+      node->name = "node_state";
+      node->node_type = AI_NODE_SHADER;
+      node->output_type = AI_TYPE_NODE;
+      node->methods = agNodeStateMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
