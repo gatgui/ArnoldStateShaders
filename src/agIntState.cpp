@@ -16,6 +16,8 @@ static const char* IntStateNames[] =
    "refraction_depth",
    "diffuse_depth",
    "glossy_depth",
+   "ray_type",
+   "ray_depth",
    NULL
 };
 
@@ -27,7 +29,9 @@ enum IntState
    IS_refl_depth,
    IS_refr_depth,
    IS_diff_depth,
-   IS_gloss_depth
+   IS_gloss_depth,
+   IS_Rt,
+   IS_Rr
 };
 
 node_parameters
@@ -74,6 +78,12 @@ shader_evaluate
       break;
    case IS_gloss_depth:
       sg->out.INT = sg->Rr_gloss;
+      break;
+   case IS_Rt:
+      sg->out.INT = sg->Rt;
+      break;
+   case IS_Rr:
+      sg->out.INT = sg->Rr;
       break;
    default:
       sg->out.INT = 0;
