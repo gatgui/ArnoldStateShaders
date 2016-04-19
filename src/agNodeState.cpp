@@ -27,30 +27,51 @@ enum NodeState
    NS_Lpn
 };
 
+namespace SSTR
+{
+   extern AtString state;
+   extern AtString linkable;
+   extern AtString index;
+}
+
 node_parameters
 {
-   AiParameterEnum("state", NS_Lp, NodeStateNames);
-   AiParameterInt("index", 0);
+   AiParameterEnum(SSTR::state, NS_Lp, NodeStateNames);
+   AiParameterInt(SSTR::index, 0);
    
-   AiMetaDataSetBool(mds, "state", "linkable", false);
+   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
+   AiMetaDataSetBool(mds, SSTR::index, SSTR::linkable, false);
 }
+
+struct NodeData
+{
+   NodeState state;
+   int index;
+};
 
 node_initialize
 {
+   AiNodeSetLocalData(node, new NodeData());
 }
 
 node_update
 {
+   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   data->state = (NodeState) AiNodeGetInt(node, SSTR::state);
+   data->index = AiNodeGetInt(node, SSTR::index);
 }
 
 node_finish
 {
+   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   delete data;
 }
 
 shader_evaluate
 {
-   NodeState state = (NodeState) AiShaderEvalParamInt(p_state);
-   switch (state)
+   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   
+   switch (data->state)
    {
    case NS_Lp:
       sg->out.PTR = sg->Lp;
@@ -66,10 +87,9 @@ shader_evaluate
       break;
    case NS_Lpn:
       {
-         int idx = AiShaderEvalParamInt(p_index);
-         if (idx >= 0 && idx < sg->nlights)
+         if (data->index >= 0 && data->index < sg->nlights)
          {
-            sg->out.PTR = sg->lights[idx];
+            sg->out.PTR = sg->lights[data->index];
          }
          else
          {

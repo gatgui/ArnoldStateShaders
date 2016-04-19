@@ -8,6 +8,20 @@ extern AtNodeMethods* agFloatStateMtd;
 extern AtNodeMethods* agMatrixStateMtd;
 extern AtNodeMethods* agNodeStateMtd;
 
+namespace SSTR
+{
+   AtString state("state");
+   AtString linkable("linkable");
+   AtString frame("frame");
+   AtString motion_start_frame("motion_start_frame");
+   AtString motion_end_frame("motion_end_frame");
+   AtString relative_motion_frame("relative_motion_frame");
+   AtString shutter_start("shutter_start");
+   AtString shutter_end("shutter_end");
+   AtString fps("fps");
+   AtString index("index");
+}
+
 node_loader
 {
    if (i == 0)

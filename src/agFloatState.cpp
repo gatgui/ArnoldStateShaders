@@ -61,20 +61,7 @@ enum FloatState
    FS_Ldist
 };
 
-struct FloatStateData
-{
-   float frame; // The frame being rendered
-   float motion_start_frame; // First motion sample frame
-   float motion_end_frame; // Last motion sample frame
-   float shutter_open_frame; // Shutter open frame
-   float shutter_close_frame; // Shutter close frame
-   float shutter_open_time;
-   float shutter_close_time;
-   float fps;
-   bool relative_motion_frame;
-};
-
-static bool GetNodeConstantFloat(AtNode *node, const char *name, float &val, const char *msg=NULL)
+static bool GetNodeConstantFloat(AtNode *node, AtString name, float &val, const char *msg=NULL)
 {
    const AtUserParamEntry *pe = AiNodeLookUpUserParameter(node, name);
    if (pe != 0)
@@ -99,25 +86,25 @@ static bool GetNodeConstantFloat(AtNode *node, const char *name, float &val, con
             val = AiNodeGetFlt(node, name);
             break;
          default:
-            AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" should be a float or an integer (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+            AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" should be a float or an integer (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
             return false;
          }
          return true;
       }
       else
       {
-         AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" must be a constant (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+         AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" must be a constant (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
          return false;
       }
    }
    else
    {
-      AiMsgWarning("[float_state] \"%s\" parameter not defined on node \"%s\" (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+      AiMsgWarning("[float_state] \"%s\" parameter not defined on node \"%s\" (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
       return false;
    }
 }
 
-static bool GetNodeConstantBool(AtNode *node, const char *name, bool &val, const char *msg=NULL)
+static bool GetNodeConstantBool(AtNode *node, AtString name, bool &val, const char *msg=NULL)
 {
    const AtUserParamEntry *pe = AiNodeLookUpUserParameter(node, name);
    if (pe != 0)
@@ -145,103 +132,130 @@ static bool GetNodeConstantBool(AtNode *node, const char *name, bool &val, const
             val = (AiNodeGetFlt(node, name) != 0.0f);
             break;
          default:
-            AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" should be a bool, an integer or a float (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+            AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" should be a bool, an integer or a float (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
             return false;
          }
          return true;
       }
       else
       {
-         AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" must be a constant (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+         AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" must be a constant (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
          return false;
       }
    }
    else
    {
-      AiMsgWarning("[float_state] \"%s\" parameter not defined on node \"%s\" (%s)", name, AiNodeGetName(node), (msg ? msg : ""));
+      AiMsgWarning("[float_state] \"%s\" parameter not defined on node \"%s\" (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
       return false;
    }
 }
 
+namespace SSTR
+{
+   extern AtString state;
+   extern AtString linkable;
+   extern AtString frame;
+   extern AtString motion_start_frame;
+   extern AtString motion_end_frame;
+   extern AtString relative_motion_frame;
+   extern AtString shutter_start;
+   extern AtString shutter_end;
+   extern AtString fps;
+}
+
 node_parameters
 {
-   AiParameterEnum("state", 0, FloatStateNames);
+   AiParameterEnum(SSTR::state, 0, FloatStateNames);
    
-   AiMetaDataSetBool(mds, "state", "linkable", false);
+   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
+
+struct NodeData
+{
+   int state;
+   float frame; // The frame being rendered
+   float motionStartFrame; // First motion sample frame
+   float motionEndFrame; // Last motion sample frame
+   float shutterOpenFrame; // Shutter open frame
+   float shutterCloseFrame; // Shutter close frame
+   float shutterOpenTime;
+   float shutterCloseTime;
+   float fps;
+   bool relativeMotionFrame;
+};
 
 node_initialize
 {
-   FloatStateData *data = (FloatStateData*) AiMalloc(sizeof(FloatStateData));
-   AiNodeSetLocalData(node, data);
+   AiNodeSetLocalData(node, new NodeData());
 }
 
 node_update
 {
-   FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
+   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
    
+   data->state = AiNodeGetInt(node, SSTR::state);
    data->frame = 0.0f;
-   data->motion_start_frame = 0.0f;
-   data->motion_end_frame = 0.0f;
-   data->shutter_open_frame = 0.0f;
-   data->shutter_close_frame = 0.0f;
-   data->shutter_open_time = 0.0f;
-   data->shutter_close_time = 0.0f;
+   data->motionStartFrame = 0.0f;
+   data->motionEndFrame = 0.0f;
+   data->shutterOpenFrame = 0.0f;
+   data->shutterCloseFrame = 0.0f;
+   data->shutterOpenTime = 0.0f;
+   data->shutterCloseTime = 0.0f;
    data->fps = 24.0f;
-   data->relative_motion_frame = false;
+   data->relativeMotionFrame = false;
 
    AtNode *opts = AiUniverseGetOptions();
    if (opts)
    {
-      GetNodeConstantFloat(opts, "frame", data->frame, "Defaults to 0");
+      GetNodeConstantFloat(opts, SSTR::frame, data->frame, "Defaults to 0");
       
-      GetNodeConstantBool(opts, "relative_motion_frame", data->relative_motion_frame, "Defaults to false");
+      GetNodeConstantBool(opts, SSTR::relative_motion_frame, data->relativeMotionFrame, "Defaults to false");
       
-      data->motion_start_frame = data->frame;
-      if (GetNodeConstantFloat(opts, "motion_start_frame", data->motion_start_frame, "Defaults to 'frame'"))
+      data->motionStartFrame = data->frame;
+      if (GetNodeConstantFloat(opts, SSTR::motion_start_frame, data->motionStartFrame, "Defaults to 'frame'"))
       {
-         if (data->relative_motion_frame)
+         if (data->relativeMotionFrame)
          {
-            data->motion_start_frame += data->frame;
+            data->motionStartFrame += data->frame;
          }
       }
       
-      data->motion_end_frame = data->motion_start_frame;
-      if (GetNodeConstantFloat(opts, "motion_end_frame", data->motion_end_frame, "Defaults to 'motion_start_frame'"))
+      data->motionEndFrame = data->motionStartFrame;
+      if (GetNodeConstantFloat(opts, SSTR::motion_end_frame, data->motionEndFrame, "Defaults to 'motion_start_frame'"))
       {
-         if (data->relative_motion_frame)
+         if (data->relativeMotionFrame)
          {
-            data->motion_end_frame += data->frame;
+            data->motionEndFrame += data->frame;
          }
       }
       
       AtNode *camera = AiUniverseGetCamera();
       if (camera)
       {
-         data->shutter_open_time = AiNodeGetFlt(camera, "shutter_start");
-         data->shutter_close_time = AiNodeGetFlt(camera, "shutter_end");
+         data->shutterOpenTime = AiNodeGetFlt(camera, SSTR::shutter_start);
+         data->shutterCloseTime = AiNodeGetFlt(camera, SSTR::shutter_end);
          
-         float sample_length = data->motion_end_frame - data->motion_start_frame;
+         float sampleLength = data->motionEndFrame - data->motionStartFrame;
          
-         if (sample_length <= 0.0f)
+         if (sampleLength <= 0.0f)
          {
-            data->shutter_open_frame = data->motion_start_frame;
-            data->shutter_close_frame = data->motion_start_frame;
+            data->shutterOpenFrame = data->motionStartFrame;
+            data->shutterCloseFrame = data->motionStartFrame;
          }
          else
          {
-            data->shutter_open_frame = data->motion_start_frame + data->shutter_open_time * sample_length;
-            data->shutter_close_frame = data->motion_start_frame + data->shutter_close_time * sample_length;
+            data->shutterOpenFrame = data->motionStartFrame + data->shutterOpenTime * sampleLength;
+            data->shutterCloseFrame = data->motionStartFrame + data->shutterCloseTime * sampleLength;
          }
       }
       else
       {
          AiMsgWarning("[float_state] No render camera set. Default shutter_open_frame and shuffer_close_frame to 'motion_start_frame'");
-         data->shutter_open_frame = data->motion_start_frame;
-         data->shutter_close_frame = data->shutter_open_frame;
+         data->shutterOpenFrame = data->motionStartFrame;
+         data->shutterCloseFrame = data->shutterOpenFrame;
       }
       
-      GetNodeConstantFloat(opts, "fps", data->fps, "Defaults to 24");
+      GetNodeConstantFloat(opts, SSTR::fps, data->fps, "Defaults to 24");
    }
    else
    {
@@ -251,14 +265,15 @@ node_update
 
 node_finish
 {
-   FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-   AiFree(data);
+   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   delete data;
 }
 
 shader_evaluate
 {
-   int which = AiShaderEvalParamInt(p_state);
-   switch (which)
+   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+
+   switch (data->state)
    {
    case FS_u:
       sg->out.FLT = sg->u;
@@ -303,46 +318,25 @@ shader_evaluate
       sg->out.FLT = sg->area;
       break;
    case FS_frame:
-      {
-         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-         sg->out.FLT = data->frame;
-      }
+      sg->out.FLT = data->frame;
       break;
    case FS_fps:
-      {
-         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-         sg->out.FLT = data->fps;
-      }
+      sg->out.FLT = data->fps;
       break;
    case FS_shutter_open_time:
-      {
-         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-         sg->out.FLT = data->shutter_open_time;
-      }
+      sg->out.FLT = data->shutterOpenTime;
       break;
    case FS_shutter_close_time:
-      {
-         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-         sg->out.FLT = data->shutter_close_time;
-      }
+      sg->out.FLT = data->shutterCloseTime;
       break;
    case FS_shutter_open_frame:
-      {
-         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-         sg->out.FLT = data->shutter_open_frame;
-      }
+      sg->out.FLT = data->shutterOpenFrame;
       break;
    case FS_shutter_close_frame:
-      {
-         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-         sg->out.FLT = data->shutter_close_frame;
-      }
+      sg->out.FLT = data->shutterCloseFrame;
       break;
    case FS_sample_frame:
-      {
-         FloatStateData *data = (FloatStateData*) AiNodeGetLocalData(node);
-         sg->out.FLT = data->motion_start_frame + sg->time * (data->motion_end_frame - data->motion_start_frame);
-      }
+      sg->out.FLT = data->motionStartFrame + sg->time * (data->motionEndFrame - data->motionStartFrame);
       break;
    case FS_Ldist:
       sg->out.FLT = sg->Ldist;

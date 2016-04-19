@@ -28,28 +28,39 @@ enum ColorState
    CS_out_opacity
 };
 
+namespace SSTR
+{
+   extern AtString state;
+   extern AtString linkable;
+}
+
 node_parameters
 {
-   AiParameterEnum("state", CS_Li, ColorStateNames);
+   AiParameterEnum(SSTR::state, CS_Li, ColorStateNames);
    
-   AiMetaDataSetBool(mds, "state", "linkable", false);
+   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
 
 node_initialize
 {
+   AiNodeSetLocalData(node, AiMalloc(sizeof(int)));
 }
 
 node_update
 {
+   int *data = (int*) AiNodeGetLocalData(node);
+   *data = AiNodeGetInt(node, SSTR::state);
 }
 
 node_finish
 {
+   AiFree(AiNodeGetLocalData(node));
 }
 
 shader_evaluate
 {
-   ColorState state = (ColorState) AiShaderEvalParamInt(p_state);
+   ColorState state = (ColorState) *((int*) AiNodeGetLocalData(node));
+   
    switch (state)
    {
    case CS_Li:

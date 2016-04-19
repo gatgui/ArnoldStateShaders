@@ -24,10 +24,8 @@ static const char* VectorStateNames[] =
    "dPdv",
    "dDdx",
    "dDdy",
-#ifdef ARNOLD_4_1_AND_UP
    "dNdx",
    "dNdy",
-#endif
    "incident_light_direction",
    NULL
 };
@@ -49,36 +47,45 @@ enum VectorState
    VS_dPdv,
    VS_dDdx,
    VS_dDdy,
-#ifdef ARNOLD_4_1_AND_UP
    VS_dNdx,
    VS_dNdy,
-#endif
    VS_Ld
 };
 
+namespace SSTR
+{
+   extern AtString state;
+   extern AtString linkable;
+}
+
 node_parameters
 {
-   AiParameterEnum("state", 0, VectorStateNames);
+   AiParameterEnum(SSTR::state, 0, VectorStateNames);
    
-   AiMetaDataSetBool(mds, "state", "linkable", false);
+   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
 
 node_initialize
 {
+   AiNodeSetLocalData(node, AiMalloc(sizeof(int)));
 }
 
 node_update
 {
+   int *data = (int*) AiNodeGetLocalData(node);
+   *data = AiNodeGetInt(node, SSTR::state);
 }
 
 node_finish
 {
+   AiFree(AiNodeGetLocalData(node));
 }
 
 shader_evaluate
 {
-   VectorState which = (VectorState) AiShaderEvalParamInt(p_state);
-   switch (which)
+   VectorState state = (VectorState) *((int*) AiNodeGetLocalData(node));
+
+   switch (state)
    {
    case VS_P:
       sg->out.VEC = sg->P;
@@ -125,14 +132,12 @@ shader_evaluate
    case VS_dDdy:
       sg->out.VEC = sg->dDdy;
       break;
-#ifdef ARNOLD_4_1_AND_UP
    case VS_dNdx:
       sg->out.VEC = sg->dNdx;
       break;
    case VS_dNdy:
       sg->out.VEC = sg->dNdy;
       break;
-#endif
    case VS_Ld:
       sg->out.VEC = sg->Ld;
       break;

@@ -34,29 +34,40 @@ enum IntState
    IS_Rr
 };
 
+namespace SSTR
+{
+   extern AtString state;
+   extern AtString linkable;
+}
+
 node_parameters
 {
-   AiParameterEnum("state", 0, IntStateNames);
+   AiParameterEnum(SSTR::state, 0, IntStateNames);
    
-   AiMetaDataSetBool(mds, "state", "linkable", false);
+   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
 
 node_initialize
 {
+   AiNodeSetLocalData(node, AiMalloc(sizeof(int)));
 }
 
 node_update
 {
+   int *data = (int*) AiNodeGetLocalData(node);
+   *data = AiNodeGetInt(node, SSTR::state);
 }
 
 node_finish
 {
+   AiFree(AiNodeGetLocalData(node));
 }
 
 shader_evaluate
 {
-   IntState which = (IntState) AiShaderEvalParamInt(p_state);
-   switch (which)
+   IntState state = (IntState) *((int*) AiNodeGetLocalData(node));
+
+   switch (state)
    {
    case IS_x:
       sg->out.INT = sg->x;

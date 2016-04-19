@@ -26,28 +26,38 @@ enum MatrixState
    MS_WtoS
 };
 
+namespace SSTR
+{
+   extern AtString state;
+   extern AtString linkable;
+}
+
 node_parameters
 {
-   AiParameterEnum("state", 0, MatrixStateNames);
+   AiParameterEnum(SSTR::state, 0, MatrixStateNames);
    
-   AiMetaDataSetBool(mds, "state", "linkable", false);
+   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
 
 node_initialize
 {
+   AiNodeSetLocalData(node, AiMalloc(sizeof(int)));
 }
 
 node_update
 {
+   int *data = (int*) AiNodeGetLocalData(node);
+   *data = AiNodeGetInt(node, SSTR::state);
 }
 
 node_finish
 {
+   AiFree(AiNodeGetLocalData(node));
 }
 
 shader_evaluate
 {
-   MatrixState state = (MatrixState) AiShaderEvalParamInt(p_state);
+   MatrixState state = (MatrixState) *((int*) AiNodeGetLocalData(node));
    
    if (state > MS_WtoO)
    {
