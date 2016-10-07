@@ -35,8 +35,6 @@ namespace SSTR
 node_parameters
 {
    AiParameterEnum(SSTR::state, 0, MatrixStateNames);
-   
-   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
 
 node_initialize

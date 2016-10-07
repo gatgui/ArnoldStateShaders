@@ -37,8 +37,6 @@ namespace SSTR
 node_parameters
 {
    AiParameterEnum(SSTR::state, CS_Li, ColorStateNames);
-   
-   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
 
 node_initialize

@@ -38,9 +38,6 @@ node_parameters
 {
    AiParameterEnum(SSTR::state, NS_Lp, NodeStateNames);
    AiParameterInt(SSTR::index, 0);
-   
-   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
-   AiMetaDataSetBool(mds, SSTR::index, SSTR::linkable, false);
 }
 
 struct NodeData

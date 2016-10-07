@@ -166,8 +166,6 @@ namespace SSTR
 node_parameters
 {
    AiParameterEnum(SSTR::state, 0, FloatStateNames);
-   
-   AiMetaDataSetBool(mds, SSTR::state, SSTR::linkable, false);
 }
 
 struct NodeData
