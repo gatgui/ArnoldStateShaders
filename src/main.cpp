@@ -25,6 +25,10 @@ SOFTWARE.
 #include <ai.h>
 #include <cstring>
 
+#ifndef PREFIX
+#  define PREFIX ""
+#endif
+
 extern AtNodeMethods* agVectorStateMtd;
 extern AtNodeMethods* agColorStateMtd;
 extern AtNodeMethods* agIntStateMtd;

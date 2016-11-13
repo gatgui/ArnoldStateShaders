@@ -110,20 +110,20 @@ static bool GetNodeConstantFloat(AtNode *node, AtString name, float &val, const 
             val = AiNodeGetFlt(node, name);
             break;
          default:
-            AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" should be a float or an integer (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
+            AiMsgWarning("[%sstate_f] \"%s\" parameter on node \"%s\" should be a float or an integer (%s)", PREFIX, name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
             return false;
          }
          return true;
       }
       else
       {
-         AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" must be a constant (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
+         AiMsgWarning("[%sstate_f] \"%s\" parameter on node \"%s\" must be a constant (%s)", PREFIX, name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
          return false;
       }
    }
    else
    {
-      AiMsgWarning("[float_state] \"%s\" parameter not defined on node \"%s\" (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
+      AiMsgWarning("[%sstate_f] \"%s\" parameter not defined on node \"%s\" (%s)", PREFIX, name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
       return false;
    }
 }
@@ -156,20 +156,20 @@ static bool GetNodeConstantBool(AtNode *node, AtString name, bool &val, const ch
             val = (AiNodeGetFlt(node, name) != 0.0f);
             break;
          default:
-            AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" should be a bool, an integer or a float (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
+            AiMsgWarning("[%sstate_f] \"%s\" parameter on node \"%s\" should be a bool, an integer or a float (%s)", PREFIX, name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
             return false;
          }
          return true;
       }
       else
       {
-         AiMsgWarning("[float_state] \"%s\" parameter on node \"%s\" must be a constant (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
+         AiMsgWarning("[%sstate_f] \"%s\" parameter on node \"%s\" must be a constant (%s)", PREFIX, name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
          return false;
       }
    }
    else
    {
-      AiMsgWarning("[float_state] \"%s\" parameter not defined on node \"%s\" (%s)", name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
+      AiMsgWarning("[%sstate_f] \"%s\" parameter not defined on node \"%s\" (%s)", PREFIX, name.c_str(), AiNodeGetName(node), (msg ? msg : ""));
       return false;
    }
 }
@@ -272,7 +272,7 @@ node_update
       }
       else
       {
-         AiMsgWarning("[float_state] No render camera set. Default shutter_open_frame and shuffer_close_frame to 'motion_start_frame'");
+         AiMsgWarning("[%sstate_f] No render camera set. Default shutter_open_frame and shuffer_close_frame to 'motion_start_frame'", PREFIX);
          data->shutterOpenFrame = data->motionStartFrame;
          data->shutterCloseFrame = data->shutterOpenFrame;
       }
@@ -281,7 +281,7 @@ node_update
    }
    else
    {
-      AiMsgWarning("[float_state] No options node. \"frame\", \"fps\", \"motion_start_frame\" and \"motion_end_frame\" default to 0, 24, 0 and 0 respectivelly");
+      AiMsgWarning("[%sstate_f] No options node. \"frame\", \"fps\", \"motion_start_frame\" and \"motion_end_frame\" default to 0, 24, 0 and 0 respectivelly", PREFIX);
    }
 }
 

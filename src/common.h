@@ -27,4 +27,8 @@ SOFTWARE.
 
 #include <ai.h>
 
+#ifndef PREFIX
+#  define PREFIX ""
+#endif
+
 #endif
