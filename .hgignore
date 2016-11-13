@@ -1,6 +1,0 @@
-syntax: glob
-release
-debug
-.build
-excons.cache
-*.dblite

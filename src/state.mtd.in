@@ -1,40 +1,40 @@
 
-[node vector_state]
+[node ${prefix}state_v]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165F7
    
    [attr state]
       linkable BOOL false
 
-[node float_state]
+[node ${prefix}state_f]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165F8
    
    [attr state]
       linkable BOOL false
 
-[node color_state]
+[node ${prefix}state_c3]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165F9
    
    [attr state]
       linkable BOOL false
 
-[node integer_state]
+[node ${prefix}state_i]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165FA
    
    [attr state]
       linkable BOOL false
 
-[node matrix_state]
+[node ${prefix}state_m]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165FB
    
    [attr state]
       linkable BOOL false
 
-[node node_state]
+[node ${prefix}state_n]
    maya.classification STRING "utility/state"
    maya.id INT 0x00116555
    

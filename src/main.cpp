@@ -26,7 +26,7 @@ node_loader
 {
    if (i == 0)
    {
-      node->name = "vector_state";
+      node->name = PREFIX "state_v";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_VECTOR;
       node->methods = agVectorStateMtd;
@@ -35,7 +35,7 @@ node_loader
    }
    else if (i == 1)
    {
-      node->name = "float_state";
+      node->name = PREFIX "state_f";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_FLOAT;
       node->methods = agFloatStateMtd;
@@ -44,7 +44,7 @@ node_loader
    }
    else if (i == 2)
    {
-      node->name = "color_state";
+      node->name = PREFIX "state_c3";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_RGB;
       node->methods = agColorStateMtd;
@@ -53,7 +53,7 @@ node_loader
    }
    else if (i == 3)
    {
-      node->name = "integer_state";
+      node->name = PREFIX "state_i";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_INT;
       node->methods = agIntStateMtd;
@@ -62,7 +62,7 @@ node_loader
    }
    else if (i == 4)
    {
-      node->name = "matrix_state";
+      node->name = PREFIX "state_m";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_MATRIX;
       node->methods = agMatrixStateMtd;
@@ -71,7 +71,7 @@ node_loader
    }
    else if (i == 5)
    {
-      node->name = "node_state";
+      node->name = PREFIX "state_n";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_NODE;
       node->methods = agNodeStateMtd;

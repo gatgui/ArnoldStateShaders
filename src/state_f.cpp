@@ -1,4 +1,4 @@
-#include "agState.h"
+#include "common.h"
 #include <iostream>
 
 AI_SHADER_NODE_EXPORT_METHODS(agFloatStateMtd);
