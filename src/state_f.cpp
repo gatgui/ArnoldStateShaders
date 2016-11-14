@@ -319,7 +319,7 @@ shader_evaluate
       sg->out.FLT = sg->we;
       break;
    case FS_Rl:
-      sg->out.FLT = sg->Rl;
+      sg->out.FLT = float(sg->Rl);
       break;
    case FS_dudx:
       sg->out.FLT = sg->dudx;
