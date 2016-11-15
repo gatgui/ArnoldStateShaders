@@ -41,7 +41,9 @@ prjs = [
   }
 ]
 
-excons.DeclareTargets(env, prjs)
+targets = excons.DeclareTargets(env, prjs)
+
+targets[name].extend(mtd)
 
 excons.EcosystemDist(env, "state.env", {name: ""}, name=name)
 
