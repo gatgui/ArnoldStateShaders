@@ -29,12 +29,12 @@ SOFTWARE.
 #  define PREFIX ""
 #endif
 
-extern AtNodeMethods* agVectorStateMtd;
-extern AtNodeMethods* agColorStateMtd;
-extern AtNodeMethods* agIntStateMtd;
-extern AtNodeMethods* agFloatStateMtd;
-extern AtNodeMethods* agMatrixStateMtd;
-extern AtNodeMethods* agNodeStateMtd;
+extern AtNodeMethods* StateVMtd;
+extern AtNodeMethods* StateC3Mtd;
+extern AtNodeMethods* StateIMtd;
+extern AtNodeMethods* StateFMtd;
+extern AtNodeMethods* StateMMtd;
+extern AtNodeMethods* StateNMtd;
 
 namespace SSTR
 {
@@ -57,7 +57,7 @@ node_loader
       node->name = PREFIX "state_v";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_VECTOR;
-      node->methods = agVectorStateMtd;
+      node->methods = StateVMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
@@ -66,7 +66,7 @@ node_loader
       node->name = PREFIX "state_f";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_FLOAT;
-      node->methods = agFloatStateMtd;
+      node->methods = StateFMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
@@ -75,7 +75,7 @@ node_loader
       node->name = PREFIX "state_c3";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_RGB;
-      node->methods = agColorStateMtd;
+      node->methods = StateC3Mtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
@@ -84,7 +84,7 @@ node_loader
       node->name = PREFIX "state_i";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_INT;
-      node->methods = agIntStateMtd;
+      node->methods = StateIMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
@@ -93,7 +93,7 @@ node_loader
       node->name = PREFIX "state_m";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_MATRIX;
-      node->methods = agMatrixStateMtd;
+      node->methods = StateMMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
@@ -102,7 +102,7 @@ node_loader
       node->name = PREFIX "state_n";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_NODE;
-      node->methods = agNodeStateMtd;
+      node->methods = StateNMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }

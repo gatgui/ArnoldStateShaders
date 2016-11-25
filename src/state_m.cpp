@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "common.h"
 
-AI_SHADER_NODE_EXPORT_METHODS(agMatrixStateMtd);
+AI_SHADER_NODE_EXPORT_METHODS(StateMMtd);
 
 enum  MatrixStateParams
 {

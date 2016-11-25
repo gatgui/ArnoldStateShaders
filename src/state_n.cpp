@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "common.h"
 
-AI_SHADER_NODE_EXPORT_METHODS(agNodeStateMtd);
+AI_SHADER_NODE_EXPORT_METHODS(StateNMtd);
 
 enum NodeStateParams
 {
