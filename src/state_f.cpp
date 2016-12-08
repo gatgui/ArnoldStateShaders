@@ -192,7 +192,7 @@ node_parameters
    AiParameterEnum(SSTR::state, 0, FloatStateNames);
 }
 
-struct NodeData
+struct StateFData
 {
    int state;
    float frame; // The frame being rendered
@@ -208,12 +208,12 @@ struct NodeData
 
 node_initialize
 {
-   AiNodeSetLocalData(node, new NodeData());
+   AiNodeSetLocalData(node, new StateFData());
 }
 
 node_update
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   StateFData *data = (StateFData*) AiNodeGetLocalData(node);
    
    data->state = AiNodeGetInt(node, SSTR::state);
    data->frame = 0.0f;
@@ -287,13 +287,13 @@ node_update
 
 node_finish
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   StateFData *data = (StateFData*) AiNodeGetLocalData(node);
    delete data;
 }
 
 shader_evaluate
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   StateFData *data = (StateFData*) AiNodeGetLocalData(node);
 
    switch (data->state)
    {

@@ -64,7 +64,7 @@ node_parameters
    AiParameterInt(SSTR::index, 0);
 }
 
-struct NodeData
+struct StateNData
 {
    NodeState state;
    int index;
@@ -72,25 +72,25 @@ struct NodeData
 
 node_initialize
 {
-   AiNodeSetLocalData(node, new NodeData());
+   AiNodeSetLocalData(node, new StateNData());
 }
 
 node_update
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   StateNData *data = (StateNData*) AiNodeGetLocalData(node);
    data->state = (NodeState) AiNodeGetInt(node, SSTR::state);
    data->index = AiNodeGetInt(node, SSTR::index);
 }
 
 node_finish
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   StateNData *data = (StateNData*) AiNodeGetLocalData(node);
    delete data;
 }
 
 shader_evaluate
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   StateNData *data = (StateNData*) AiNodeGetLocalData(node);
    
    switch (data->state)
    {
