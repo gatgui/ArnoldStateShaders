@@ -2,7 +2,9 @@
 /debug/
 /.build/
 /eco/
+/src/*.mtd
+/maya/*.py
 *.dblite
+*.config
 excons.cache
-src/*.mtd
 state.env.tmp
