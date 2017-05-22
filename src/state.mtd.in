@@ -2,7 +2,7 @@
 [node @PREFIX@state_v]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165F7
-   maya.name STRING @STATEV_MAYA_NODENAME@
+   maya.name STRING "@STATEV_MAYA_NODENAME@"
    
    [attr state]
       linkable BOOL false
@@ -10,7 +10,7 @@
 [node @PREFIX@state_f]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165F8
-   maya.name STRING @STATEF_MAYA_NODENAME@
+   maya.name STRING "@STATEF_MAYA_NODENAME@"
    
    [attr state]
       linkable BOOL false
@@ -18,7 +18,7 @@
 [node @PREFIX@state_c3]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165F9
-   maya.name STRING @STATEC3_MAYA_NODENAME@
+   maya.name STRING "@STATEC3_MAYA_NODENAME@"
    
    [attr state]
       linkable BOOL false
@@ -26,7 +26,7 @@
 [node @PREFIX@state_i]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165FA
-   maya.name STRING @STATEI_MAYA_NODENAME@
+   maya.name STRING "@STATEI_MAYA_NODENAME@"
    
    [attr state]
       linkable BOOL false
@@ -34,7 +34,7 @@
 [node @PREFIX@state_m]
    maya.classification STRING "utility/state"
    maya.id INT 0x001165FB
-   maya.name STRING @STATEM_MAYA_NODENAME@
+   maya.name STRING "@STATEM_MAYA_NODENAME@"
    
    [attr state]
       linkable BOOL false
@@ -42,7 +42,7 @@
 [node @PREFIX@state_n]
    maya.classification STRING "utility/state"
    maya.id INT 0x00116555
-   maya.name STRING @STATEN_MAYA_NODENAME@
+   maya.name STRING "@STATEN_MAYA_NODENAME@"
    
    [attr state]
       linkable BOOL false
