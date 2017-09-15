@@ -316,6 +316,7 @@ shader_evaluate
       sg->out.FLT() = 1 - (sg->y + sg->py) * (2.0f / AiNodeGetInt(AiUniverseGetOptions(), "yres"));;
       break;
    case FS_we:
+      AiLightsGetSample(sg, ls);
       sg->out.FLT() = 1.0f / ls.pdf;
       break;
    case FS_Rl:
@@ -337,7 +338,6 @@ shader_evaluate
       sg->out.FLT() = sg->time;
       break;
    case FS_area:
-      AiLightsGetSample(sg, ls);
       sg->out.FLT() = AiShaderGlobalsArea(sg);
       break;
    case FS_frame:

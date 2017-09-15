@@ -108,7 +108,6 @@ shader_evaluate
    VectorState state = (VectorState) *((int*) AiNodeGetLocalData(node));
    AtLightSample ls;
 
-
    switch (state)
    {
    case VS_P:
