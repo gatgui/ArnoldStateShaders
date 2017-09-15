@@ -36,9 +36,6 @@ static const char* ColorStateNames[] =
    "light_intensity",
    "unoccluded_light_intensity",
    "shadow_occlusion",
-   "volume_input_color",
-   "volume_output_radiance",
-   "output_opacity",
    NULL
 };
 
@@ -47,9 +44,6 @@ enum ColorState
    CS_Li = 0,
    CS_Liu,
    CS_Lo,
-   CS_Ci,
-   CS_Vo,
-   CS_out_opacity
 };
 
 namespace SSTR
@@ -82,28 +76,21 @@ node_finish
 shader_evaluate
 {
    ColorState state = (ColorState) *((int*) AiNodeGetLocalData(node));
-   
+   AtLightSample ls;
+   AiLightsGetSample(sg, ls);
+
    switch (state)
    {
    case CS_Li:
-      sg->out.RGB = sg->Li;
+      sg->out.RGB() = ls.Li;
       break;
    case CS_Liu:
-      sg->out.RGB = sg->Liu;
+      sg->out.RGB() = ls.Liu;
       break;
    case CS_Lo:
-      sg->out.RGB = sg->Lo;
-      break;
-   case CS_Ci:
-      sg->out.RGB = (sg->sc == AI_CONTEXT_VOLUME ? sg->Ci : AI_RGB_BLACK);
-      break;
-   case CS_Vo:
-      sg->out.RGB = (sg->sc == AI_CONTEXT_VOLUME ? sg->Vo : AI_RGB_BLACK);
-      break;
-   case CS_out_opacity:
-      sg->out.RGB = sg->out_opacity;
+      sg->out.RGB() = ls.Lo;
       break;
    default:
-      sg->out.RGB = AI_RGB_BLACK;
+      sg->out.RGB() = AI_RGB_BLACK;
    }
 }

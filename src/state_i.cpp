@@ -37,9 +37,9 @@ static const char* IntStateNames[] =
    "raster_y",
    "active_lights_count",
    "reflection_depth",
-   "refraction_depth",
+   "transmission_depth",
    "diffuse_depth",
-   "glossy_depth",
+   "specular_depth",
    "ray_type",
    "ray_depth",
    NULL
@@ -51,9 +51,9 @@ enum IntState
    IS_y,
    IS_nlights,
    IS_refl_depth,
-   IS_refr_depth,
+   IS_trans_depth,
    IS_diff_depth,
-   IS_gloss_depth,
+   IS_specular_depth,
    IS_Rt,
    IS_Rr
 };
@@ -92,33 +92,33 @@ shader_evaluate
    switch (state)
    {
    case IS_x:
-      sg->out.INT = sg->x;
+      sg->out.INT() = sg->x;
       break;
    case IS_y:
-      sg->out.INT = sg->y;
+      sg->out.INT() = sg->y;
       break;
    case IS_nlights:
-      sg->out.INT = sg->nlights;
+      sg->out.INT() = sg->nlights;
       break;
    case IS_refl_depth:
-      sg->out.INT = sg->Rr_refl;
+      sg->out.INT() = sg->bounces_reflect;
       break;
-   case IS_refr_depth:
-      sg->out.INT = sg->Rr_refr;
+   case IS_trans_depth:
+      sg->out.INT() = sg->bounces_transmit;
       break;
    case IS_diff_depth:
-      sg->out.INT = sg->Rr_diff;
+      sg->out.INT() = sg->bounces_diffuse;
       break;
-   case IS_gloss_depth:
-      sg->out.INT = sg->Rr_gloss;
+   case IS_specular_depth:
+      sg->out.INT() = sg->bounces_specular;
       break;
    case IS_Rt:
-      sg->out.INT = sg->Rt;
+      sg->out.INT() = sg->Rt;
       break;
    case IS_Rr:
-      sg->out.INT = sg->Rr;
+      sg->out.INT() = sg->bounces;
       break;
    default:
-      sg->out.INT = 0;
+      sg->out.INT() = 0;
    }
 }

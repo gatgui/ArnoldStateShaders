@@ -91,34 +91,35 @@ node_finish
 shader_evaluate
 {
    StateNData *data = (StateNData*) AiNodeGetLocalData(node);
-   
+   AtLightSample ls;
    switch (data->state)
    {
    case NS_Lp:
-      sg->out.PTR = sg->Lp;
+      AiLightsGetSample(sg, ls);
+      sg->out.PTR() = (void *)ls.Lp;
       break;
    case NS_shader:
-      sg->out.PTR = sg->shader;
+      sg->out.PTR() = sg->shader;
       break;
    case NS_proc:
-      sg->out.PTR = sg->proc;
+      sg->out.PTR() = sg->proc;
       break;
    case NS_Op:
-      sg->out.PTR = sg->Op;
+      sg->out.PTR() = sg->Op;
       break;
    case NS_Lpn:
       {
          if (data->index >= 0 && data->index < sg->nlights)
          {
-            sg->out.PTR = sg->lights[data->index];
+            sg->out.PTR() = sg->lights[data->index];
          }
          else
          {
-            sg->out.PTR = NULL;
+            sg->out.PTR() = NULL;
          }
       }
       break;
    default:
-      sg->out.PTR = NULL;
+      sg->out.PTR() = NULL;
    }
 }

@@ -294,76 +294,78 @@ node_finish
 shader_evaluate
 {
    StateFData *data = (StateFData*) AiNodeGetLocalData(node);
-
+   AtLightSample ls;
    switch (data->state)
    {
    case FS_u:
-      sg->out.FLT = sg->u;
+      sg->out.FLT() = sg->u;
       break;
    case FS_v:
-      sg->out.FLT = sg->v;
+      sg->out.FLT() = sg->v;
       break;
    case FS_bu:
-      sg->out.FLT = sg->bu;
+      sg->out.FLT() = sg->bu;
       break;
    case FS_bv:
-      sg->out.FLT = sg->bv;
+      sg->out.FLT() = sg->bv;
       break;
    case FS_sx:
-      sg->out.FLT = sg->sx;
+      sg->out.FLT() = -1 + (sg->x + sg->px) * (2.0f / AiNodeGetInt(AiUniverseGetOptions(), "xres"));;
       break;
    case FS_sy:
-      sg->out.FLT = sg->sy;
+      sg->out.FLT() = 1 - (sg->y + sg->py) * (2.0f / AiNodeGetInt(AiUniverseGetOptions(), "yres"));;
       break;
    case FS_we:
-      sg->out.FLT = sg->we;
+      sg->out.FLT() = 1.0f / ls.pdf;
       break;
    case FS_Rl:
-      sg->out.FLT = float(sg->Rl);
+      sg->out.FLT() = float(sg->Rl);
       break;
    case FS_dudx:
-      sg->out.FLT = sg->dudx;
+      sg->out.FLT() = sg->dudx;
       break;
    case FS_dudy:
-      sg->out.FLT = sg->dudy;
+      sg->out.FLT() = sg->dudy;
       break;
    case FS_dvdx:
-      sg->out.FLT = sg->dvdx;
+      sg->out.FLT() = sg->dvdx;
       break;
    case FS_dvdy:
-      sg->out.FLT = sg->dvdy;
+      sg->out.FLT() = sg->dvdy;
       break;
    case FS_time:
-      sg->out.FLT = sg->time;
+      sg->out.FLT() = sg->time;
       break;
    case FS_area:
-      sg->out.FLT = sg->area;
+      AiLightsGetSample(sg, ls);
+      sg->out.FLT() = AiShaderGlobalsArea(sg);
       break;
    case FS_frame:
-      sg->out.FLT = data->frame;
+      sg->out.FLT() = data->frame;
       break;
    case FS_fps:
-      sg->out.FLT = data->fps;
+      sg->out.FLT() = data->fps;
       break;
    case FS_shutter_open_time:
-      sg->out.FLT = data->shutterOpenTime;
+      sg->out.FLT() = data->shutterOpenTime;
       break;
    case FS_shutter_close_time:
-      sg->out.FLT = data->shutterCloseTime;
+      sg->out.FLT() = data->shutterCloseTime;
       break;
    case FS_shutter_open_frame:
-      sg->out.FLT = data->shutterOpenFrame;
+      sg->out.FLT() = data->shutterOpenFrame;
       break;
    case FS_shutter_close_frame:
-      sg->out.FLT = data->shutterCloseFrame;
+      sg->out.FLT() = data->shutterCloseFrame;
       break;
    case FS_sample_frame:
-      sg->out.FLT = data->motionStartFrame + sg->time * (data->motionEndFrame - data->motionStartFrame);
+      sg->out.FLT() = data->motionStartFrame + sg->time * (data->motionEndFrame - data->motionStartFrame);
       break;
    case FS_Ldist:
-      sg->out.FLT = sg->Ldist;
+      AiLightsGetSample(sg, ls);
+      sg->out.FLT() = ls.Ldist;
       break;
    default:
-      sg->out.FLT = 0.0f;
+      sg->out.FLT() = 0.0f;
    }
 }
