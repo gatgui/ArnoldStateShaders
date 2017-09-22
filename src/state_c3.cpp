@@ -26,35 +26,29 @@ SOFTWARE.
 
 AI_SHADER_NODE_EXPORT_METHODS(StateC3Mtd);
 
-enum ColorStateParams
-{
-   p_state = 0
-};
+// enum ColorStateParams
+// {
+//    p_state = 0
+// };
 
-static const char* ColorStateNames[] =
-{
-   "light_intensity",
-   "unoccluded_light_intensity",
-   "shadow_occlusion",
-   NULL
-};
+// static const char* ColorStateNames[] =
+// {
+//    NULL
+// };
 
-enum ColorState
-{
-   CS_Li = 0,
-   CS_Liu,
-   CS_Lo,
-};
+// enum ColorState
+// {
+// };
 
 namespace SSTR
 {
-   extern AtString state;
+   // extern AtString state;
    extern AtString linkable;
 }
 
 node_parameters
 {
-   AiParameterEnum(SSTR::state, CS_Li, ColorStateNames);
+   // AiParameterEnum(SSTR::state, CS_Li, ColorStateNames);
 }
 
 node_initialize
@@ -64,8 +58,8 @@ node_initialize
 
 node_update
 {
-   int *data = (int*) AiNodeGetLocalData(node);
-   *data = AiNodeGetInt(node, SSTR::state);
+   // int *data = (int*) AiNodeGetLocalData(node);
+   // *data = AiNodeGetInt(node, SSTR::state);
 }
 
 node_finish
@@ -75,22 +69,7 @@ node_finish
 
 shader_evaluate
 {
-   ColorState state = (ColorState) *((int*) AiNodeGetLocalData(node));
-   AtLightSample ls;
-   AiLightsGetSample(sg, ls);
+   // ColorState state = (ColorState) *((int*) AiNodeGetLocalData(node));
 
-   switch (state)
-   {
-   case CS_Li:
-      sg->out.RGB() = ls.Li;
-      break;
-   case CS_Liu:
-      sg->out.RGB() = ls.Liu;
-      break;
-   case CS_Lo:
-      sg->out.RGB() = ls.Lo;
-      break;
-   default:
-      sg->out.RGB() = AI_RGB_BLACK;
-   }
+   sg->out.RGB() = AI_RGB_BLACK;
 }

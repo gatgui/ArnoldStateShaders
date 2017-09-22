@@ -40,7 +40,6 @@ static const char* FloatStateNames[] =
    "barycentric_v",
    "screen_x",
    "screen_y",
-   "sample_weight",
    "ray_length",
    "dudx",
    "dudy",
@@ -55,7 +54,6 @@ static const char* FloatStateNames[] =
    "shutter_close_frame",
    "shutter_open_time",
    "shutter_close_time",
-   "light_distance",
    NULL
 };
 
@@ -67,7 +65,6 @@ enum FloatState
    FS_bv,
    FS_sx,
    FS_sy,
-   FS_we,
    FS_Rl,
    FS_dudx,
    FS_dudy,
@@ -82,7 +79,6 @@ enum FloatState
    FS_shutter_close_frame,
    FS_shutter_open_time,
    FS_shutter_close_time,
-   FS_Ldist
 };
 
 static bool GetNodeConstantFloat(AtNode *node, AtString name, float &val, const char *msg=NULL)
@@ -294,7 +290,7 @@ node_finish
 shader_evaluate
 {
    StateFData *data = (StateFData*) AiNodeGetLocalData(node);
-   AtLightSample ls;
+
    switch (data->state)
    {
    case FS_u:
@@ -314,10 +310,6 @@ shader_evaluate
       break;
    case FS_sy:
       sg->out.FLT() = 1 - (sg->y + sg->py) * (2.0f / AiNodeGetInt(AiUniverseGetOptions(), "yres"));;
-      break;
-   case FS_we:
-      AiLightsGetSample(sg, ls);
-      sg->out.FLT() = 1.0f / ls.pdf;
       break;
    case FS_Rl:
       sg->out.FLT() = float(sg->Rl);
@@ -360,10 +352,6 @@ shader_evaluate
       break;
    case FS_sample_frame:
       sg->out.FLT() = data->motionStartFrame + sg->time * (data->motionEndFrame - data->motionStartFrame);
-      break;
-   case FS_Ldist:
-      AiLightsGetSample(sg, ls);
-      sg->out.FLT() = ls.Ldist;
       break;
    default:
       sg->out.FLT() = 0.0f;

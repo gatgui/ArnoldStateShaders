@@ -6,7 +6,7 @@ class AE@STATEC3_MAYA_NODENAME@Template(ShaderAETemplate):
       self.beginScrollLayout()
       
       self.beginLayout("Parameters", collapse=False)
-      self.addControl("state")
+      # self.addControl("state")
       self.endLayout()
       
       pm.mel.AEdependNodeTemplate(self.nodeName)

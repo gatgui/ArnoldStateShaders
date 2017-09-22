@@ -50,7 +50,6 @@ static const char* VectorStateNames[] =
    "dDdy",
    "dNdx",
    "dNdy",
-   "incident_light_direction",
    NULL
 };
 
@@ -72,8 +71,7 @@ enum VectorState
    VS_dDdx,
    VS_dDdy,
    VS_dNdx,
-   VS_dNdy,
-   VS_Ld
+   VS_dNdy
 };
 
 namespace SSTR
@@ -106,7 +104,6 @@ node_finish
 shader_evaluate
 {
    VectorState state = (VectorState) *((int*) AiNodeGetLocalData(node));
-   AtLightSample ls;
 
    switch (state)
    {
@@ -160,10 +157,6 @@ shader_evaluate
       break;
    case VS_dNdy:
       sg->out.VEC() = sg->dNdy;
-      break;
-   case VS_Ld:
-      AiLightsGetSample(sg, ls);
-      sg->out.VEC() = ls.Ld;
       break;
    default:
       sg->out.VEC() = AI_V3_ZERO;

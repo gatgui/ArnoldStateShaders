@@ -7,7 +7,6 @@ class AE@STATEN_MAYA_NODENAME@Template(ShaderAETemplate):
       
       self.beginLayout("Parameters", collapse=False)
       self.addControl("state")
-      self.addControl("index", label="Light Index")
       self.endLayout()
       
       pm.mel.AEdependNodeTemplate(self.nodeName)
