@@ -29,12 +29,12 @@ SOFTWARE.
 #  define PREFIX ""
 #endif
 
-extern AtNodeMethods* StateVMtd;
-extern AtNodeMethods* StateC3Mtd;
-extern AtNodeMethods* StateIMtd;
-extern AtNodeMethods* StateFMtd;
-extern AtNodeMethods* StateMMtd;
-extern AtNodeMethods* StateNMtd;
+extern const AtNodeMethods* StateVMtd;
+extern const AtNodeMethods* StateC3Mtd;
+extern const AtNodeMethods* StateIMtd;
+extern const AtNodeMethods* StateFMtd;
+extern const AtNodeMethods* StateMMtd;
+extern const AtNodeMethods* StateNMtd;
 
 namespace SSTR
 {

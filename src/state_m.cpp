@@ -83,27 +83,27 @@ shader_evaluate
    
    if (state > MS_WtoO)
    {
-      sg->out.pMTX = (AtMatrix*) AiShaderGlobalsQuickAlloc(sg, sizeof(AtMatrix));
+      sg->out.pMTX() = (AtMatrix*) AiShaderGlobalsQuickAlloc(sg, sizeof(AtMatrix));
    }
    
    switch (state)
    {
    case MS_OtoW:
-      sg->out.pMTX = &(sg->M);
+      sg->out.pMTX() = &(sg->M);
       break;
    case MS_WtoO:
-      sg->out.pMTX = &(sg->Minv);
+      sg->out.pMTX() = &(sg->Minv);
       break;
    case MS_CtoW:
-      AiCameraToWorldMatrix(AiUniverseGetCamera(), sg->time, *(sg->out.pMTX));
+      AiCameraToWorldMatrix(AiUniverseGetCamera(), sg->time, *(sg->out.pMTX()));
       break;
    case MS_WtoC:
-      AiWorldToCameraMatrix(AiUniverseGetCamera(), sg->time, *(sg->out.pMTX));
+      AiWorldToCameraMatrix(AiUniverseGetCamera(), sg->time, *(sg->out.pMTX()));
       break;
    case MS_WtoS:
-      AiWorldToScreenMatrix(AiUniverseGetCamera(), sg->time, *(sg->out.pMTX));
+      AiWorldToScreenMatrix(AiUniverseGetCamera(), sg->time, *(sg->out.pMTX()));
       break;
    default:
-      AiM4Identity(*(sg->out.pMTX));
+      *(sg->out.pMTX()) = AiM4Identity();
    }
 }

@@ -34,40 +34,33 @@ enum NodeStateParams
 
 static const char* NodeStateNames[] =
 {
-   "current_light",
    "current_shader",
    "procedural",
    "object",
-   "light",
    NULL
 };
 
 enum NodeState
 {
-   NS_Lp = 0,
-   NS_shader,
+   NS_shader = 0,
    NS_proc,
-   NS_Op,
-   NS_Lpn
+   NS_Op
 };
 
 namespace SSTR
 {
    extern AtString state;
    extern AtString linkable;
-   extern AtString index;
 }
 
 node_parameters
 {
-   AiParameterEnum(SSTR::state, NS_Lp, NodeStateNames);
-   AiParameterInt(SSTR::index, 0);
+   AiParameterEnum(SSTR::state, NS_shader, NodeStateNames);
 }
 
 struct StateNData
 {
    NodeState state;
-   int index;
 };
 
 node_initialize
@@ -79,7 +72,6 @@ node_update
 {
    StateNData *data = (StateNData*) AiNodeGetLocalData(node);
    data->state = (NodeState) AiNodeGetInt(node, SSTR::state);
-   data->index = AiNodeGetInt(node, SSTR::index);
 }
 
 node_finish
@@ -91,34 +83,18 @@ node_finish
 shader_evaluate
 {
    StateNData *data = (StateNData*) AiNodeGetLocalData(node);
-   
    switch (data->state)
    {
-   case NS_Lp:
-      sg->out.PTR = sg->Lp;
-      break;
    case NS_shader:
-      sg->out.PTR = sg->shader;
+      sg->out.PTR() = sg->shader;
       break;
    case NS_proc:
-      sg->out.PTR = sg->proc;
+      sg->out.PTR() = sg->proc;
       break;
    case NS_Op:
-      sg->out.PTR = sg->Op;
-      break;
-   case NS_Lpn:
-      {
-         if (data->index >= 0 && data->index < sg->nlights)
-         {
-            sg->out.PTR = sg->lights[data->index];
-         }
-         else
-         {
-            sg->out.PTR = NULL;
-         }
-      }
+      sg->out.PTR() = sg->Op;
       break;
    default:
-      sg->out.PTR = NULL;
+      sg->out.PTR() = NULL;
    }
 }

@@ -20,8 +20,8 @@
    maya.id INT 0x001165F9
    maya.name STRING "@STATEC3_MAYA_NODENAME@"
    
-   [attr state]
-      linkable BOOL false
+   # [attr state]
+   #    linkable BOOL false
 
 [node @PREFIX@state_i]
    maya.classification STRING "utility/state"
